@@ -25,3 +25,40 @@ resilience4j:
         limit-for-period: 2 #2 requests per 10 second
         limit-refresh-period: 10s # 10 seconds to refresh limits
         timeout-duration: 0s  # if request rejected how much time let this to be in rejected state
+  circuitbreaker:
+    instances:
+      inventoryCircuitBreaker:
+
+        #Sliding window Configuration
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 6
+        minimum-number-of-calls: 1
+
+        # Failure Threshold
+        failure-rate-threshold: 50
+
+        # Open State Configuration
+        wait-duration-in-open-state: 10s
+
+        # Half Open Configuration
+        permitted-number-of-calls-in-half-open-state: 3
+        max-wait-duration-in-half-open-state: 5s
+        automatic-transition-from-open-to-half-open-enabled: true
+
+        record-exceptions:
+          - java.lang.RunTimeException
+          - java.io.IOException
+          - org.springframework.web.client.HttpServerException
+
+        ignore-exceptions:
+          - java.lang.IllegalArgumentException
+
+
+
+
+
+
+
+
+
+
