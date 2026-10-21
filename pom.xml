@@ -79,6 +79,12 @@
             <artifactId>spring-boot-starter-aspectj</artifactId>
         </dependency>
 
+        <!-- resiliance4j-->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot3</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
