@@ -17,25 +17,25 @@ public class OrderService {
 
     private final RestTemplate restTemplate;
     private final RestClient restClient;
-    private final InventoryClient inventoryClient;
+    private final InventoryService inventoryService;
 
-    public OrderService(RestTemplate restTemplate, RestClient restClient, InventoryClient inventoryClient) {
+    public OrderService(RestTemplate restTemplate, RestClient restClient, InventoryService inventoryService) {
         this.restTemplate = restTemplate;
         this.restClient = restClient;
-        this.inventoryClient = inventoryClient;
+        this.inventoryService = inventoryService;
     }
     public String placeOrder(Long productId){
         //TODO Call inventory service to check stock
 //        String response = restTemplate.getForObject(
 //                "http://localhost:8083/inventory/"+productId,
 //                String.class);
-        ResponseEntity<Inventory> entity=restClient.get()
-                .uri("http://localhost:8083/inventory/"+productId)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError,((request, response) -> {
-                    throw new MyCustomRuntimeException(response.getStatusCode(),response.getHeaders());
-                }))
-                .toEntity(Inventory.class);
+//        ResponseEntity<Inventory> entity=restClient.get()
+//                .uri("http://localhost:8083/inventory/"+productId)
+//                .retrieve()
+//                .onStatus(HttpStatusCode::is4xxClientError,((request, response) -> {
+//                    throw new MyCustomRuntimeException(response.getStatusCode(),response.getHeaders());
+//                }))
+//                .toEntity(Inventory.class);
 
       /* Object exchange= restClient.get()
                 .uri("http://localhost:8083/inventory/"+productId)
@@ -48,11 +48,11 @@ public class OrderService {
                         } )); */
 
 
-//        Inventory inventory= inventoryClient.getInventory(productId);
-//        int quantity=inventory.getQuantity();
-        updateInventory(entity.getBody());
+        Inventory inventory= inventoryService.getInventory(productId);
+        int quantity=inventory.getQuantity();
+        updateInventory(inventory);
 
-        return  entity.getBody() !=null && entity.getBody().getQuantity()>0?
+        return  quantity>0?
                 "order Placed Successfully!":
                 "Product Out of Stock";
     }
