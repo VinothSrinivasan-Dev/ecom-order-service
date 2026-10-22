@@ -45,16 +45,19 @@ resilience4j:
         max-wait-duration-in-half-open-state: 5s
         automatic-transition-from-open-to-half-open-enabled: true
 
-        record-exceptions:
-          - java.lang.RunTimeException
-          - java.io.IOException
-          - org.springframework.web.client.HttpServerException
+#        record-exceptions:
+#          - java.lang.RunTimeException
+#          - java.io.IOException
+#          - org.springframework.web.client.HttpServerException
+#
+#        ignore-exceptions:
+#          - java.lang.IllegalArgumentException
 
-        ignore-exceptions:
-          - java.lang.IllegalArgumentException
-
-
-
+  timelimiter:
+    instances:
+      inventoryTimeLimiter:
+        timeout-duration: 2s
+        cancel-running-future: true
 
 
 

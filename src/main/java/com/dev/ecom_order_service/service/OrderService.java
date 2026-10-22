@@ -48,7 +48,7 @@ public class OrderService {
                         } )); */
 
 
-        Inventory inventory= inventoryService.getInventory(productId);
+        Inventory inventory= inventoryService.getInventory(productId).join();
         int quantity=inventory.getQuantity();
         updateInventory(inventory);
 
