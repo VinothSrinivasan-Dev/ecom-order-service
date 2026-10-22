@@ -1,6 +1,13 @@
 spring:
   application:
     name: ecom-order-service
+  cloud:    # Disabling the defaukt Retry in Feign Client
+    openfeign:
+      client:
+        config:
+          ecom-inventory-service:
+            connectTimeout: 2000
+            readTimeout: 30000
 
 server:
   port: 8082
@@ -45,13 +52,25 @@ resilience4j:
         max-wait-duration-in-half-open-state: 5s
         automatic-transition-from-open-to-half-open-enabled: true
 
-        record-exceptions:
-          - java.lang.RunTimeException
-          - java.io.IOException
-          - org.springframework.web.client.HttpServerException
+#        record-exceptions:
+#          - java.lang.RunTimeException
+#          - java.io.IOException
+#          - org.springframework.web.client.HttpServerException
+#
+#        ignore-exceptions:
+#          - java.lang.IllegalArgumentException
 
-        ignore-exceptions:
-          - java.lang.IllegalArgumentException
+  bulkhead:
+    instances:
+      inventoryServiceBulkHead:
+        max-concurrent-calls: 2
+        max-wait-duration: 0s
+  thread-pool-bulkhead:
+    instances:
+      inventoryThreadPool:
+        max-thread-pool-size: 3
+        core-thread-pool-size: 1
+        queue-capacity: 0
 
 
 

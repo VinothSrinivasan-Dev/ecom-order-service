@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class OrderService {
@@ -18,13 +19,15 @@ public class OrderService {
     private final RestTemplate restTemplate;
     private final RestClient restClient;
     private final InventoryService inventoryService;
+    private final InventoryClient inventoryClient;
 
-    public OrderService(RestTemplate restTemplate, RestClient restClient, InventoryService inventoryService) {
+    public OrderService(RestTemplate restTemplate, RestClient restClient, InventoryService inventoryService, InventoryClient inventoryClient) {
         this.restTemplate = restTemplate;
         this.restClient = restClient;
         this.inventoryService = inventoryService;
+        this.inventoryClient = inventoryClient;
     }
-    public String placeOrder(Long productId){
+    public String placeOrder(Long productId) throws ExecutionException, InterruptedException {
         //TODO Call inventory service to check stock
 //        String response = restTemplate.getForObject(
 //                "http://localhost:8083/inventory/"+productId,
@@ -48,7 +51,7 @@ public class OrderService {
                         } )); */
 
 
-        Inventory inventory= inventoryService.getInventory(productId);
+        Inventory inventory= inventoryService.getInventory(productId).get();
         int quantity=inventory.getQuantity();
         updateInventory(inventory);
 
@@ -58,13 +61,16 @@ public class OrderService {
     }
 
     private void updateInventory(Inventory inventory) {
+       if(inventory.getQuantity() <=0){
+           return;
+       }
         inventory.setQuantity(inventory.getQuantity()-1);
-        restClient.post()
-                .uri("http://localhost:8083/inventory")
-                .body(inventory)
-                .retrieve()
-                .toBodilessEntity();
-//       inventoryClient.updateInventory(inventory);
+//        restClient.post()
+//                .uri("http://localhost:8083/inventory")
+//                .body(inventory)
+//                .retrieve()
+//                .toBodilessEntity();
+       inventoryClient.updateInventory(inventory);
 
     }
 }
