@@ -8,12 +8,20 @@ spring:
           ecom-inventory-service:
             connectTimeout: 2000
             readTimeout: 30000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 server:
   port: 8082
 
 logging:
   level:
+    org.springframework.amqp: DEBUG
+    org.springframework.amqp.rabbit: DEBUG
+    org.springframework.boot.autoconfigure.amqp: DEBUG
     com.dev.ecom_order_service.client: DEBUG
     com.netflix.discovery: DEBUG
 
@@ -85,7 +93,6 @@ management:
     metrics:
       export:
         url: http://localhost:4318/v1/metrics
-
 
 
 

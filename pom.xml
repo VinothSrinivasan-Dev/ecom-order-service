@@ -103,6 +103,12 @@
             <artifactId>feign-micrometer</artifactId>
         </dependency>
 
+        <!-- rabbit Mq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
