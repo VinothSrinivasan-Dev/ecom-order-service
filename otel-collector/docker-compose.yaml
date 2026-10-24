@@ -11,8 +11,13 @@ services:
       - "4317:4317"
       - "4318:4318"
 
-  zipkin:
-    image: openzipkin/zipkin:latest
-    container_name: zipkin
+#  zipkin:
+#    image: openzipkin/zipkin:latest
+#    container_name: zipkin
+#    ports:
+#      - "9411:9411"
+  jaeger:
+    image: cr.jaegertracing.io/jaegertracing/jaeger:2.21.0
+    container_name: jaeger
     ports:
-      - "9411:9411"
+      - "16686:16686"
